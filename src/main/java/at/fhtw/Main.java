@@ -3,6 +3,7 @@ package at.fhtw;
 import at.fhtw.httpserver.server.Server;
 import at.fhtw.httpserver.utils.Router;
 import at.fhtw.mtcg.model.User;
+import at.fhtw.mtcg.service.session.SessionService;
 import at.fhtw.mtcg.service.user.UserService;
 import at.fhtw.sampleapp.service.echo.EchoService;
 import at.fhtw.sampleapp.service.weather.WeatherService;
@@ -23,6 +24,7 @@ public class Main {
     {
         Router router = new Router();
         router.addService("/users", new UserService());
+        router.addService("/sessions", new SessionService());
 
         return router;
     }

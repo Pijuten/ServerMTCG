@@ -25,9 +25,7 @@ public class UserService implements Service {
             //return this.weatherController.getWeatherPerRepository();
         } else if (request.getMethod() == Method.POST) {
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            User user = objectMapper.readValue(json, User.class);
-                return userController.addUser(user);
+                return userController.addUser(request);
         }
         return new Response(
                 HttpStatus.BAD_REQUEST,
