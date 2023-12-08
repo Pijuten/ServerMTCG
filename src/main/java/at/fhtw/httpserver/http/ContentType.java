@@ -1,13 +1,13 @@
-package at.fhtw.httpserver.http;
+    package at.fhtw.httpserver.http;
 
-public enum ContentType {
-    PLAIN_TEXT("text/plain"),
-    HTML("text/html"),
-    JSON("application/json");
+    public enum ContentType {
+        PLAIN_TEXT("text/plain"),
+        HTML("text/html"),
+        JSON("application/json");
 
-    public final String type;
+        public final String type;
 
-    ContentType(String type) {
-        this.type = type;
+        ContentType(String type) {
+            this.type = type;
+        }
     }
-}

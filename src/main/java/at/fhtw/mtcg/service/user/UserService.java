@@ -19,8 +19,6 @@ public class UserService implements Service {
     @Override
     public Response handleRequest(Request request) {
         try {
-        System.out.println(request.getBody());
-        String json =request.getBody();
         if (request.getMethod() == Method.GET) {
             //return this.weatherController.getWeatherPerRepository();
         } else if (request.getMethod() == Method.POST) {

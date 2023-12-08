@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.service.session;
+package at.fhtw.mtcg.packages;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -6,21 +6,20 @@ import at.fhtw.httpserver.http.Method;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
-import at.fhtw.mtcg.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import at.fhtw.mtcg.service.session.SessionController;
 
-public class SessionService implements Service {
+public class PackageService implements Service {
 
-    private final SessionController sessionController;
-    public SessionService(){this.sessionController=new SessionController();}
+    private final PackageController packageController;
+    public PackageService(){this.packageController=new PackageController();}
     @Override
     public Response handleRequest(Request request) {
         try {
             if (request.getMethod() == Method.GET) {
                 //return this.weatherController.getWeatherPerRepository();
-            } else if (request.getMethod() == Method.POST) {
+            } else if (request.getMethod() == Method.POST && request.getHeaderMap().getHeader("Authorization").equals("altenhof-mtcgToken")) {
 
-                return sessionController.loginUser(request);
+                return packageController.createPackage(request);
             }
             return new Response(
                     HttpStatus.BAD_REQUEST,

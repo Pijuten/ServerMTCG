@@ -78,7 +78,7 @@ public class Request {
         this.params = params;
     }
 
-    public HeaderMap getHeaderMap() {
+    public HeaderMap    getHeaderMap() {
         return headerMap;
     }
 

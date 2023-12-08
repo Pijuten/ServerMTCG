@@ -9,7 +9,6 @@ import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.UserRepository;
 import at.fhtw.mtcg.model.User;
 import at.fhtw.mtcg.service.user.PasswordHash;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SessionController extends Controller {
     public Response loginUser(Request request){
@@ -25,11 +24,10 @@ public class SessionController extends Controller {
                 retrivedUser.setToken(tokenGenerator.getToken());
                 userRepository.updateUser(retrivedUser);
                 unitOfWork.commitTransaction();
-                unitOfWork.finishWork();
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
-                        "{\"Token\":\""+retrivedUser.getToken()+"\"}"
+                        "{\"token\":\""+retrivedUser.getToken()+"\"}"
                 );
             }else{
                 throw new RuntimeException("Password not the same");

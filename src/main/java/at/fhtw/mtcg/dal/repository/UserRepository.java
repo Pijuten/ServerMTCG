@@ -63,6 +63,35 @@ public class UserRepository {
             throw new DataAccessException("Select nicht erfolgreich", e);
         }
     }
+    public User getUserByToken(String token) {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""
+                                 select * from userdata
+                                 where token = ?
+                             """)) {
+            preparedStatement.setString(1, token);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Collection<User> userRows = new ArrayList<>();
+            if (resultSet.next()) {
+                return new User(
+                        resultSet.getString(1),
+                        resultSet.getBytes(2),
+                        resultSet.getString(3),
+                        resultSet.getInt(4),
+                        resultSet.getInt(5),
+                        resultSet.getInt(6),
+                        resultSet.getInt(7),
+                        resultSet.getInt(8),
+                        resultSet.getString(9),
+                        resultSet.getString(10),
+                        resultSet.getString(11),
+                        resultSet.getBytes(12));
+            }
+            throw new RuntimeException("No user Token");
+        } catch (SQLException e) {
+            throw new DataAccessException("Select nicht erfolgreich", e);
+        }
+    }
     public void updateUser(User user){
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
@@ -99,4 +128,5 @@ public class UserRepository {
             throw new DataAccessException("Insert nicht erfolgreich", e);
         }
     }
+
 }

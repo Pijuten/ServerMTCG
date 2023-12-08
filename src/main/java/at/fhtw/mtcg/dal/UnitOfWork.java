@@ -49,7 +49,7 @@ public class UnitOfWork implements AutoCloseable{
         }
     }
 
-    public PreparedStatement prepareStatement(String sql)
+        public PreparedStatement prepareStatement(String sql)
     {
         if (this.connection != null) {
             try {
