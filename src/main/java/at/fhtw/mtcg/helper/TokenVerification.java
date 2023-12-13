@@ -10,6 +10,7 @@ public class TokenVerification {
         UnitOfWork unitOfWork = new UnitOfWork();
         try(unitOfWork) {
             UserRepository userRepository = new UserRepository(unitOfWork);
+            unitOfWork.commitTransaction();
             return userRepository.getUserByToken(request.getHeaderMap().getHeader("Authorization"));
         }catch (Exception e){
             unitOfWork.rollbackTransaction();

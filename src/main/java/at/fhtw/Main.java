@@ -2,12 +2,12 @@ package at.fhtw;
 
 import at.fhtw.httpserver.server.Server;
 import at.fhtw.httpserver.utils.Router;
-import at.fhtw.mtcg.model.User;
-import at.fhtw.mtcg.packages.PackageService;
+import at.fhtw.mtcg.service.card.CardService;
+import at.fhtw.mtcg.service.deck.DeckService;
+import at.fhtw.mtcg.service.packages.PackageService;
 import at.fhtw.mtcg.service.session.SessionService;
+import at.fhtw.mtcg.service.transaction.TransactionService;
 import at.fhtw.mtcg.service.user.UserService;
-import at.fhtw.sampleapp.service.echo.EchoService;
-import at.fhtw.sampleapp.service.weather.WeatherService;
 
 import java.io.IOException;
 
@@ -27,6 +27,9 @@ public class Main {
         router.addService("/users", new UserService());
         router.addService("/sessions", new SessionService());
         router.addService("/packages", new PackageService());
+        router.addService("/transactions", new TransactionService());
+        router.addService("/cards", new CardService());
+        router.addService("/deck", new DeckService());
 
         return router;
     }

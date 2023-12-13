@@ -2,7 +2,6 @@ package at.fhtw.mtcg.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +18,7 @@ public class Card {
     private int packageid;
 
     public Card(){}
-    public Card(String id, String name, float damage) {
+    public Card(String id, String name, double damage) {
 
         this.id = id;
         this.name = name;

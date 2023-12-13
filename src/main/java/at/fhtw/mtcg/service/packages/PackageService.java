@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.service.transaction;
+package at.fhtw.mtcg.service.packages;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -7,18 +7,21 @@ import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
 
-public class TransactionService implements Service {
+public class PackageService implements Service {
 
-    private final TransactionController transactionController;
-    public TransactionService(){this.transactionController =new TransactionController();}
+    private final PackageController cardController;
+    public PackageService(){this.cardController =new PackageController();}
     @Override
     public Response handleRequest(Request request) {
+
+
+            System.out.println(request.getHeaderMap().getHeader("Authorization"));
         try {
             if (request.getMethod() == Method.GET) {
+                //return this.weatherController.getWeatherPerRepository();
+            } else if (request.getMethod() == Method.POST && request.getHeaderMap().getHeader("Authorization").equals("admin-mtcgToken")) {
 
-            } else if (request.getMethod() == Method.POST) {
-                if(request.getPathParts().get(1).equals("packages"))
-                    return transactionController.purchasePackage(request);
+                return cardController.createPackage(request);
             }
             return new Response(
                     HttpStatus.BAD_REQUEST,

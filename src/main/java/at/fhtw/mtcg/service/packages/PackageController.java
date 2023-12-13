@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.packages;
+package at.fhtw.mtcg.service.packages;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -9,13 +9,9 @@ import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.PackageRepository;
 import at.fhtw.mtcg.model.Card;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.sql.ResultSet;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public class PackageController extends Controller {
     public Response createPackage(Request request){
@@ -35,6 +31,7 @@ public class PackageController extends Controller {
                     "{ \"message\" : \"Creation Success\" }"
             );
         }catch (Exception e){
+            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,

@@ -3,6 +3,7 @@ package at.fhtw.mtcg.dal.repository;
 import at.fhtw.mtcg.dal.DataAccessException;
 import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.model.Card;
+import at.fhtw.mtcg.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -56,6 +57,54 @@ public class PackageRepository {
         }
         return null;
     }
+    public  Collection<Card> getCardsByUsername(User user){
+        try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
+                     SELECT * FROM CARDS
+                     WHERE username=?
+                """)) {
+            preparedStatement.setString(1,user.getUsername());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Collection<Card> cardRows = new ArrayList<>();
+            while (resultSet.next()){
+                cardRows.add(
+                        new Card(
+                                resultSet.getString("cardid"),
+                                resultSet.getString("cardname"),
+                                resultSet.getDouble("damage"),
+                                resultSet.getBoolean("deck"),
+                                resultSet.getString("username"),
+                                resultSet.getInt("packageid")
+                        ));
+            }
+            return cardRows;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public  Collection<Card> getDeck(User user){
+        try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
+                     SELECT * FROM CARDS
+                     WHERE username=? and deck=true
+                """)) {
+            preparedStatement.setString(1,user.getUsername());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Collection<Card> cardRows = new ArrayList<>();
+            while (resultSet.next()){
+                cardRows.add(
+                        new Card(
+                                resultSet.getString("cardid"),
+                                resultSet.getString("cardname"),
+                                resultSet.getDouble("damage"),
+                                resultSet.getBoolean("deck"),
+                                resultSet.getString("username"),
+                                resultSet.getInt("packageid")
+                        ));
+            }
+            return cardRows;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public  Collection<Card> getAllCards(){
         try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
                      SELECT * FROM CARDS
@@ -84,8 +133,22 @@ public class PackageRepository {
                                 Select max(packageid) from cards
                              """)) {
             ResultSet rs = preparedStatement.executeQuery();
+            rs.next();
             return rs.getInt(1);
         } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DataAccessException("Insert nicht erfolgreich", e);
+        }
+    }
+    public void addNameToMinPackages(User user){
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""
+                                UPDATE cards set username=? where packageid=(SELECT min(packageid) from cards where username is null)
+                             """)) {
+            preparedStatement.setString(1,user.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
             throw new DataAccessException("Insert nicht erfolgreich", e);
         }
     }
