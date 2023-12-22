@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 
 public class PackageRepository {
@@ -19,6 +20,21 @@ public class PackageRepository {
         this.unitOfWork= unitOfWork;
     }
 
+    private Collection<Card> getCardFromRs(ResultSet resultSet) throws SQLException {
+        Collection<Card> cardRows = new ArrayList<>();
+        while (resultSet.next()){
+            cardRows.add(
+                    new Card(
+                            resultSet.getString("cardid"),
+                            resultSet.getString("cardname"),
+                            resultSet.getDouble("damage"),
+                            resultSet.getBoolean("deck"),
+                            resultSet.getString("username"),
+                            resultSet.getInt("packageid")
+                    ));
+        }
+        return cardRows;
+    }
     public void createCard(Card card){
         try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
                      Insert into Cards(cardid, cardname, damage, deck, username, packageid)
@@ -41,16 +57,12 @@ public class PackageRepository {
                      WHERE cardid=?
                 """)) {
             preparedStatement.setString(1,id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                return new Card(
-                        resultSet.getString("cardid"),
-                        resultSet.getString("cardname"),
-                        resultSet.getDouble("damage"),
-                        resultSet.getBoolean("deck"),
-                        resultSet.getString("username"),
-                        resultSet.getInt("packageid")
-                );
+            Collection<Card> CardsRs = getCardFromRs(preparedStatement.executeQuery());
+            if(CardsRs.size()==1){
+                Iterator<Card> iterator = CardsRs.iterator();
+
+                // Get the first element
+                return iterator.next();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -64,19 +76,7 @@ public class PackageRepository {
                 """)) {
             preparedStatement.setString(1,user.getUsername());
             ResultSet resultSet = preparedStatement.executeQuery();
-            Collection<Card> cardRows = new ArrayList<>();
-            while (resultSet.next()){
-                cardRows.add(
-                        new Card(
-                                resultSet.getString("cardid"),
-                                resultSet.getString("cardname"),
-                                resultSet.getDouble("damage"),
-                                resultSet.getBoolean("deck"),
-                                resultSet.getString("username"),
-                                resultSet.getInt("packageid")
-                        ));
-            }
-            return cardRows;
+            return getCardFromRs(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -88,45 +88,12 @@ public class PackageRepository {
                 """)) {
             preparedStatement.setString(1,user.getUsername());
             ResultSet resultSet = preparedStatement.executeQuery();
-            Collection<Card> cardRows = new ArrayList<>();
-            while (resultSet.next()){
-                cardRows.add(
-                        new Card(
-                                resultSet.getString("cardid"),
-                                resultSet.getString("cardname"),
-                                resultSet.getDouble("damage"),
-                                resultSet.getBoolean("deck"),
-                                resultSet.getString("username"),
-                                resultSet.getInt("packageid")
-                        ));
-            }
-            return cardRows;
+            return getCardFromRs(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public  Collection<Card> getAllCards(){
-        try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
-                     SELECT * FROM CARDS
-                """)) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Collection<Card> cardRows = new ArrayList<>();
-            while (resultSet.next()){
-                cardRows.add(
-                 new Card(
-                        resultSet.getString("cardid"),
-                        resultSet.getString("cardname"),
-                        resultSet.getDouble("damage"),
-                        resultSet.getBoolean("deck"),
-                        resultSet.getString("username"),
-                        resultSet.getInt("packageid")
-                ));
-            }
-            return cardRows;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     public int getMaxPackageNumber(){
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
@@ -136,7 +103,6 @@ public class PackageRepository {
             rs.next();
             return rs.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataAccessException("Insert nicht erfolgreich", e);
         }
     }
@@ -148,8 +114,29 @@ public class PackageRepository {
             preparedStatement.setString(1,user.getUsername());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new DataAccessException("Insert nicht erfolgreich", e);
+        }
+    }
+    public void unsetDeck(User user){
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""
+                                UPDATE cards set deck=? where username=?
+                             """)) {
+            preparedStatement.setString(1,user.getUsername());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Update nicht erfolgreich", e);
+        }
+    }
+    public void addCardToDeck(Card card)  {
+        try(PreparedStatement preparedStatement =
+                    this.unitOfWork.prepareStatement("""
+                                UPDATE card set deck=true  where cardid=?
+                             """)) {
+            preparedStatement.setString(1,card.getId());
+            preparedStatement.executeUpdate();
+        }catch (Exception e){
+            throw new DataAccessException("Update nicht erfolgreich", e);
         }
     }
 }

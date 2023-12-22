@@ -16,9 +16,9 @@ public class DeckService implements Service {
     public Response handleRequest(Request request) {
         try {
             if (request.getMethod() == Method.GET) {
-                deckController.getDeck(request);
+                return deckController.getDeck(request);
             } else if (request.getMethod() == Method.POST) {
-
+                return deckController.setDeck(request);
             }
             return new Response(
                     HttpStatus.BAD_REQUEST,

@@ -30,7 +30,6 @@ public class Main {
         router.addService("/transactions", new TransactionService());
         router.addService("/cards", new CardService());
         router.addService("/deck", new DeckService());
-
         return router;
     }
 }
