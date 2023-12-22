@@ -1,7 +1,11 @@
-package at.fhtw.mtcg.dal.repository;
+package at.fhtw.mtcg.service.session;
 
+import at.fhtw.httpserver.server.Request;
+import at.fhtw.httpserver.server.Response;
 import at.fhtw.mtcg.dal.UnitOfWork;
+import at.fhtw.mtcg.dal.repository.UserRepository;
 import at.fhtw.mtcg.model.User;
+import at.fhtw.mtcg.service.user.UserController;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +14,7 @@ import java.sql.PreparedStatement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserRepositoryTest {
-
+class SessionControllerTest {
     @BeforeEach
     void emptyDb() throws Exception {
         UnitOfWork unitOfWork = new UnitOfWork();
@@ -37,30 +40,19 @@ class UserRepositoryTest {
         }
     }
     @Test
-    void createUser() {
+    public void loginUserTest(){
+        Request request = new Request();
+        request.setBody("{\"Username\":\"kienboec\", \"Password\":\"daniel\"}");
+        UserController userController = new UserController();
+        userController.addUser(request);
+        SessionController sessionController = new SessionController();
+        Response response = sessionController.loginUser(request);
+
         UnitOfWork unitOfWork = new UnitOfWork();
         UserRepository userRepository = new UserRepository(unitOfWork);
-        User user = new User("stani","password");
-        userRepository.createUser(user);
-        assertEquals(userRepository.getUserByUsername("stani").getUsername(),"stani");
-        unitOfWork.commitTransaction();
+        User retrivedUser = userRepository.getUserByUsername("kienboec");
         unitOfWork.finishWork();
-    }
-    @Test
-    void createEmptyUser() {
-        UnitOfWork unitOfWork = new UnitOfWork();
-        UserRepository userRepository = new UserRepository(unitOfWork);
-        User user = new User("","");
-        assertThrows(RuntimeException.class,() ->userRepository.createUser(user));
-        unitOfWork.commitTransaction();
-        unitOfWork.finishWork();
-    }
-
-    @Test
-    void getUserByUsername() {
-    }
-
-    @Test
-    void updateUser() {
+        assertEquals("kienboec-mtcgToken", retrivedUser.getToken());
+        assertEquals("200",response.get().substring(9,12));
     }
 }

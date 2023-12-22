@@ -17,13 +17,13 @@ public class HeaderMap {
         return headers.get(headerName);
     }
 
-    public int getContentLength() {
-        final String header = headers.get(CONTENT_LENGTH_HEADER);
-        if (header == null) {
-            return 0;
+        public int getContentLength() {
+            final String header = headers.get(CONTENT_LENGTH_HEADER);
+            if (header == null) {
+                return 0;
+            }
+            return Integer.parseInt(header);
         }
-        return Integer.parseInt(header);
-    }
 
     public void print() {
         System.out.println(headers);

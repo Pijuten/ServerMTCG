@@ -22,7 +22,7 @@ public class UserRepository {
             throw new RuntimeException("Username or password is Empty");
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
-                                 INSERT INTO userdata(username,password,salt) 
+                                 INSERT INTO userdata(username,password,salt)
                                  VALUES (?,?,?)
                              """)) {
             preparedStatement.setString(1, user.getUsername());
@@ -34,7 +34,7 @@ public class UserRepository {
         }
     }
 
-    public Collection<User> getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
                                  select * from userdata
@@ -43,8 +43,8 @@ public class UserRepository {
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             Collection<User> userRows = new ArrayList<>();
-            while (resultSet.next()) {
-                User user = new User(
+            if (resultSet.next()) {
+                return new User(
                         resultSet.getString(1),
                         resultSet.getBytes(2),
                         resultSet.getString(3),
@@ -57,10 +57,37 @@ public class UserRepository {
                         resultSet.getString(10),
                         resultSet.getString(11),
                         resultSet.getBytes(12));
-                userRows.add(user);
             }
-
-            return userRows;
+            throw new RuntimeException("No user");
+        } catch (SQLException e) {
+            throw new DataAccessException("Select nicht erfolgreich", e);
+        }
+    }
+    public User getUserByToken(String token) {
+        try (PreparedStatement preparedStatement =
+                     this.unitOfWork.prepareStatement("""
+                                 select * from userdata
+                                 where token = ?
+                             """)) {
+            preparedStatement.setString(1, token);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Collection<User> userRows = new ArrayList<>();
+            if (resultSet.next()) {
+                return new User(
+                        resultSet.getString(1),
+                        resultSet.getBytes(2),
+                        resultSet.getString(3),
+                        resultSet.getInt(4),
+                        resultSet.getInt(5),
+                        resultSet.getInt(6),
+                        resultSet.getInt(7),
+                        resultSet.getInt(8),
+                        resultSet.getString(9),
+                        resultSet.getString(10),
+                        resultSet.getString(11),
+                        resultSet.getBytes(12));
+            }
+            throw new RuntimeException("No user Token");
         } catch (SQLException e) {
             throw new DataAccessException("Select nicht erfolgreich", e);
         }
@@ -69,8 +96,20 @@ public class UserRepository {
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
                                 UPDATE userdata
-                                password=?,token=?, currency=?, score=?, wins=?, draws=?, losses=?, displayName=?, bio=?, profileimage=?,salt=?
-                                WHERE username=?
+                                SET
+                                  password = ?,\s
+                                  token = ?,\s
+                                  currency = ?,\s
+                                  score = ?,\s
+                                  wins = ?,\s
+                                  draws = ?,\s
+                                  losses = ?,\s
+                                  displayName = ?,\s
+                                  bio = ?,\s
+                                  profileimage = ?,\s
+                                  salt = ?
+                                WHERE
+                                  username = ?;
                              """)) {
             preparedStatement.setBytes(1,user.getHashedPassword());
             preparedStatement.setString(2,user.getToken());
@@ -86,7 +125,8 @@ public class UserRepository {
             preparedStatement.setString(12,user.getUsername());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Select nicht erfolgreich", e);
+            throw new DataAccessException("Insert nicht erfolgreich", e);
         }
     }
+
 }

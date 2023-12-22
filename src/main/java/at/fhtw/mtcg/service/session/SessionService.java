@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.service.user;
+package at.fhtw.mtcg.service.session;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -9,27 +9,24 @@ import at.fhtw.httpserver.server.Service;
 import at.fhtw.mtcg.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class UserService implements Service {
-    private final UserController userController;
+public class SessionService implements Service {
 
-    public UserService() {
-        this.userController = new UserController();
-    }
-
+    private final SessionController sessionController;
+    public SessionService(){this.sessionController=new SessionController();}
     @Override
     public Response handleRequest(Request request) {
         try {
-        if (request.getMethod() == Method.GET) {
-            //return this.weatherController.getWeatherPerRepository();
-        } else if (request.getMethod() == Method.POST) {
+            if (request.getMethod() == Method.GET) {
+                //return this.weatherController.getWeatherPerRepository();
+            } else if (request.getMethod() == Method.POST) {
 
-                return userController.addUser(request);
-        }
-        return new Response(
-                HttpStatus.BAD_REQUEST,
-                ContentType.JSON,
-                "[]"
-        );
+                return sessionController.loginUser(request);
+            }
+            return new Response(
+                    HttpStatus.BAD_REQUEST,
+                    ContentType.JSON,
+                    "[]"
+            );
         }catch (Exception e){
             e.printStackTrace();
             return new Response(
@@ -39,5 +36,4 @@ public class UserService implements Service {
             );
         }
     }
-
 }
