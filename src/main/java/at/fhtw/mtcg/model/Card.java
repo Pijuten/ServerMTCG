@@ -16,6 +16,7 @@ public class Card {
     private boolean deck;
     private String username;
     private int packageid;
+    private int damageType;
 
     public Card(){}
     public Card(String id, String name, double damage) {
@@ -23,6 +24,9 @@ public class Card {
         this.id = id;
         this.name = name;
         this.damage = damage;
+    }public Card(String id) {
+
+        this.id = id;
     }
 
      public void setDeck(boolean deck) {

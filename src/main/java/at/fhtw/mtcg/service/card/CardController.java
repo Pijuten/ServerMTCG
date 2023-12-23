@@ -33,7 +33,8 @@ public class CardController extends Controller {
             for(Card card:userCollection){
                 json=json.concat("{\"Cardid\": \""+card.getId()+"\", \"Cardname\": \""+card.getName()+"\", \"Damage\": \""+card.getDamage()+"\"},");
             }
-            json = json.substring(0, json.length() - 1);
+            if((json.length()>1))
+                json = json.substring(0, json.length() - 1);
             json = json.concat("]");
             return new Response(
                     HttpStatus.OK,

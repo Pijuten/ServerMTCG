@@ -66,10 +66,13 @@ public class DeckController extends Controller {
         try(unitOfWork) {
             PackageRepository packageRepository = new PackageRepository(unitOfWork);
             Collection <Card> cards = getObjectMapper().readValue(request.getBody(), new TypeReference<List<Card>>(){});
+            if(cards.size()<4)
+                throw new RuntimeException("not enough cards");
             packageRepository.unsetDeck(user);
             for(Card card:cards){
                 packageRepository.addCardToDeck(card);
             }
+            unitOfWork.commitTransaction();
             return new Response(
                     HttpStatus.OK,
                     ContentType.PLAIN_TEXT,
@@ -77,7 +80,6 @@ public class DeckController extends Controller {
             );
         }catch (Exception e){
 
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,

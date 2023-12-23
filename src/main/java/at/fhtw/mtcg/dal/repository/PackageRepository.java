@@ -30,7 +30,8 @@ public class PackageRepository {
                             resultSet.getDouble("damage"),
                             resultSet.getBoolean("deck"),
                             resultSet.getString("username"),
-                            resultSet.getInt("packageid")
+                            resultSet.getInt("packageid"),
+                            resultSet.getInt("damageType")
                     ));
         }
         return cardRows;
@@ -120,7 +121,7 @@ public class PackageRepository {
     public void unsetDeck(User user){
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
-                                UPDATE cards set deck=? where username=?
+                                UPDATE cards set deck=false where cardid=?
                              """)) {
             preparedStatement.setString(1,user.getUsername());
             preparedStatement.executeUpdate();
@@ -131,7 +132,7 @@ public class PackageRepository {
     public void addCardToDeck(Card card)  {
         try(PreparedStatement preparedStatement =
                     this.unitOfWork.prepareStatement("""
-                                UPDATE card set deck=true  where cardid=?
+                                UPDATE cards set deck=true  where cardid=?
                              """)) {
             preparedStatement.setString(1,card.getId());
             preparedStatement.executeUpdate();

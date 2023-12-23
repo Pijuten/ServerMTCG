@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserRepository {
-    private UnitOfWork unitOfWork;
+    private final UnitOfWork unitOfWork;
 
     public UserRepository(UnitOfWork unitOfWork) {
         this.unitOfWork = unitOfWork;

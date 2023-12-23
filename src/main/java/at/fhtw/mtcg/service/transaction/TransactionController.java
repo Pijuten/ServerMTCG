@@ -13,17 +13,17 @@ import at.fhtw.mtcg.model.User;
 
 public class TransactionController extends Controller {
     public Response purchasePackage(Request request){
+        TokenVerification tokenVerification = new TokenVerification();
+        User user = tokenVerification.verifyToken(request);
+        if(user==null){
+            return new Response(
+                    HttpStatus.FORBIDDEN,
+                    ContentType.JSON,
+                    "{ \"message\" : \"Not Loggedin\" }"
+            );
+        }
         UnitOfWork unitOfWork = new UnitOfWork();
         try(unitOfWork) {
-            TokenVerification tokenVerification = new TokenVerification();
-            User user = tokenVerification.verifyToken(request);
-            if(user==null){
-                return new Response(
-                        HttpStatus.FORBIDDEN,
-                        ContentType.JSON,
-                        "{ \"message\" : \"Not Loggedin\" }"
-                );
-            }
             PackageRepository packageRepository = new PackageRepository(unitOfWork);
             if(user.getCurrency()<40){
                 throw  new RuntimeException("No Money");

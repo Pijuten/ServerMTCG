@@ -11,7 +11,7 @@ public class TokenVerification {
         try(unitOfWork) {
             UserRepository userRepository = new UserRepository(unitOfWork);
             unitOfWork.commitTransaction();
-            return userRepository.getUserByToken(request.getHeaderMap().getHeader("Authorization"));
+            return userRepository.getUserByToken(request.getHeaderMap().getHeader("Authorization").replace("Bearer ",""));
         }catch (Exception e){
             unitOfWork.rollbackTransaction();
             throw new RuntimeException(e);

@@ -17,7 +17,7 @@ public class DeckService implements Service {
         try {
             if (request.getMethod() == Method.GET) {
                 return deckController.getDeck(request);
-            } else if (request.getMethod() == Method.POST) {
+            } else if (request.getMethod() == Method.PUT) {
                 return deckController.setDeck(request);
             }
             return new Response(

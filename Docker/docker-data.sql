@@ -19,6 +19,7 @@ CREATE TABLE cards(
                       deck BOOLEAN DEFAULT FALSE,
                       username varchar,
                       packageid int,
+                      damageType int,
                       CONSTRAINT FK_username_userData FOREIGN KEY(username)
                           REFERENCES userData(username)
 );

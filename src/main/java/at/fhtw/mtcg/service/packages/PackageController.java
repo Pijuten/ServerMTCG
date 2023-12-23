@@ -21,6 +21,7 @@ public class PackageController extends Controller {
             Collection <Card> cards = getObjectMapper().readValue(request.getBody(), new TypeReference<List<Card>>(){});
             int maxPackageNumber = packageRepository.getMaxPackageNumber()+1;
             for(Card card:cards){
+                card.setDamageType(getDamageType());
                 card.setPackageid(maxPackageNumber);
                 packageRepository.createCard(card);
             }
@@ -40,5 +41,9 @@ public class PackageController extends Controller {
             );
         }
 
+    }
+
+    private int getDamageType() {
+        return 0;
     }
 }

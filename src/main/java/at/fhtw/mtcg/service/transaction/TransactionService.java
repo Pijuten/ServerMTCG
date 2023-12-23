@@ -17,7 +17,6 @@ public class TransactionService implements Service {
             if (request.getMethod() == Method.GET) {
 
             } else if (request.getMethod() == Method.POST) {
-                if(request.getPathParts().get(1).equals("packages"))
                     return transactionController.purchasePackage(request);
             }
             return new Response(
