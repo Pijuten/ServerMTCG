@@ -42,8 +42,6 @@ public class DeckController extends Controller {
                     json
             );
         }catch (Exception e){
-
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -66,11 +64,11 @@ public class DeckController extends Controller {
         try(unitOfWork) {
             PackageRepository packageRepository = new PackageRepository(unitOfWork);
             Collection <Card> cards = getObjectMapper().readValue(request.getBody(), new TypeReference<List<Card>>(){});
-            if(cards.size()<4)
-                throw new RuntimeException("not enough cards");
+            if(cards.size()!=4)
+                throw new RuntimeException("Either to many or to few cards");
             packageRepository.unsetDeck(user);
             for(Card card:cards){
-                packageRepository.addCardToDeck(card);
+                packageRepository.addCardToDeck(card,user);
             }
             unitOfWork.commitTransaction();
             return new Response(

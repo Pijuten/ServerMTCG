@@ -2,6 +2,7 @@ package at.fhtw;
 
 import at.fhtw.httpserver.server.Server;
 import at.fhtw.httpserver.utils.Router;
+import at.fhtw.mtcg.service.battle.BattleService;
 import at.fhtw.mtcg.service.card.CardService;
 import at.fhtw.mtcg.service.deck.DeckService;
 import at.fhtw.mtcg.service.packages.PackageService;
@@ -30,6 +31,7 @@ public class Main {
         router.addService("/transactions", new TransactionService());
         router.addService("/cards", new CardService());
         router.addService("/deck", new DeckService());
+        router.addService("/battles", new BattleService());
         return router;
     }
 }

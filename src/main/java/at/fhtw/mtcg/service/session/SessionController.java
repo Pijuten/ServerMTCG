@@ -33,7 +33,6 @@ public class SessionController extends Controller {
                 throw new RuntimeException("Password not the same");
             }
         }catch (Exception e){
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,

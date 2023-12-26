@@ -24,11 +24,11 @@
         private int draw;
         @JsonAlias({"Loss"})
         private int loss;
-        @JsonAlias({"Displayname"})
+        @JsonAlias({"Name"})
         private String displayName;
         @JsonAlias({"Bio"})
         private String bio;
-        @JsonAlias({"Profilimage"})
+        @JsonAlias({"Image"})
         private String profileImage;
         @JsonAlias({"Salt"})
         private byte[] salt;
@@ -37,6 +37,14 @@
                     String password) {
             this.username = username;
             this.password = password;
+        }
+        public User(String displayName,
+                    String bio,
+                    String profileImage
+                    ) {
+            this.displayName = displayName;
+            this.bio = bio;
+            this.profileImage = profileImage;
         }
         public User(
                 String username,

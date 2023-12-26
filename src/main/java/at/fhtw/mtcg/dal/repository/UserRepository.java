@@ -113,8 +113,8 @@ public class UserRepository {
                              """)) {
             preparedStatement.setBytes(1,user.getHashedPassword());
             preparedStatement.setString(2,user.getToken());
-            preparedStatement.setInt(3,user.getScore());
-            preparedStatement.setInt(4,user.getCurrency());
+            preparedStatement.setInt(3,user.getCurrency());
+            preparedStatement.setInt(4,user.getScore());
             preparedStatement.setInt(5,user.getWin());
             preparedStatement.setInt(6,user.getDraw());
             preparedStatement.setInt(7,user.getLoss());

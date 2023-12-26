@@ -25,7 +25,6 @@ public class TransactionService implements Service {
                     "[]"
             );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,

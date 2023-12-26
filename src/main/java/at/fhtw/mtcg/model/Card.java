@@ -17,6 +17,7 @@ public class Card {
     private String username;
     private int packageid;
     private int damageType;
+    private int type;
 
     public Card(){}
     public Card(String id, String name, double damage) {

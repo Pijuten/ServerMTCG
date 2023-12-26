@@ -42,8 +42,6 @@ public class CardController extends Controller {
                     json
             );
         }catch (Exception e){
-
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,

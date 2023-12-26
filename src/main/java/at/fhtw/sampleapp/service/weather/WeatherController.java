@@ -36,7 +36,6 @@ public class WeatherController extends Controller {
                     weatherDataJSON
             );
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     ContentType.JSON,
@@ -57,7 +56,6 @@ public class WeatherController extends Controller {
                 weatherDataJSON
             );
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
             return new Response(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 ContentType.JSON,

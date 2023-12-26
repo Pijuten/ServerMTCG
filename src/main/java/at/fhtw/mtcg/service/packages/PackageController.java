@@ -21,7 +21,8 @@ public class PackageController extends Controller {
             Collection <Card> cards = getObjectMapper().readValue(request.getBody(), new TypeReference<List<Card>>(){});
             int maxPackageNumber = packageRepository.getMaxPackageNumber()+1;
             for(Card card:cards){
-                card.setDamageType(getDamageType());
+                card.setDamageType(getDamageType(card.getName()));
+                card.setType(getType(card.getName()));
                 card.setPackageid(maxPackageNumber);
                 packageRepository.createCard(card);
             }
@@ -32,7 +33,6 @@ public class PackageController extends Controller {
                     "{ \"message\" : \"Creation Success\" }"
             );
         }catch (Exception e){
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -43,7 +43,27 @@ public class PackageController extends Controller {
 
     }
 
-    private int getDamageType() {
+    private int getType(String name) {
+        if(name.toLowerCase().contains("spell"))
+            return 1;
         return 0;
+    }
+
+    private int getDamageType(String name) {
+        if(name.toLowerCase().contains("fire"))
+            return 0;
+        if(name.toLowerCase().contains("dragon"))
+            return 0;
+
+        if(name.toLowerCase().contains("water"))
+            return 1;
+
+        if(name.toLowerCase().contains("regular"))
+            return 2;
+        if(name.toLowerCase().contains("ork"))
+            return 2;
+        if(name.toLowerCase().contains("knight"))
+            return 2;
+        throw new RuntimeException(STR."No such type \{name}");
     }
 }

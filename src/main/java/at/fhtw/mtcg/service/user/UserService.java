@@ -20,10 +20,11 @@ public class UserService implements Service {
     public Response handleRequest(Request request) {
         try {
         if (request.getMethod() == Method.GET) {
-            //return this.weatherController.getWeatherPerRepository();
+            return userController.getUserData(request);
         } else if (request.getMethod() == Method.POST) {
-
                 return userController.addUser(request);
+        } else if (request.getMethod() == Method.PUT) {
+            return userController.editUserData(request);
         }
         return new Response(
                 HttpStatus.BAD_REQUEST,
@@ -31,7 +32,6 @@ public class UserService implements Service {
                 "[]"
         );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,

@@ -41,7 +41,9 @@ public class RequestHandler implements Runnable {
             }
             printWriter.write(response.get());
         } catch (IOException e) {
-            System.err.println(Thread.currentThread().getName() + " Error: " + e.getMessage());
+            System.err.println(STR."\{Thread.currentThread().getName()} Error: \{e.getMessage()}");
+            Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR,ContentType.JSON,"[]");
+            printWriter.write(response.get());
         }catch (Exception e) {
             e.printStackTrace();
         } finally {

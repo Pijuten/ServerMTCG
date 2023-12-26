@@ -20,14 +20,12 @@ public class PackageService implements Service {
 
                 return packageController.createPackage(request);
             }
-            System.out.println(request.getHeaderMap().getHeader("Authorization"));
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,
                     "[]"
             );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,
