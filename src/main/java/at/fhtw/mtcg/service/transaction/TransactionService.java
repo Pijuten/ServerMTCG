@@ -14,9 +14,7 @@ public class TransactionService implements Service {
     @Override
     public Response handleRequest(Request request) {
         try {
-            if (request.getMethod() == Method.GET) {
-
-            } else if (request.getMethod() == Method.POST) {
+            if (request.getMethod() == Method.POST) {
                     return transactionController.purchasePackage(request);
             }
             return new Response(

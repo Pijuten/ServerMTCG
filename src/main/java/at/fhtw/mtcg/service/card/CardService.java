@@ -19,7 +19,6 @@ public class CardService implements Service {
         try {
             if (request.getMethod() == Method.GET) {
                 return cardController.getCardsUser(request);
-            } else if (request.getMethod() == Method.POST) {
             }
             return new Response(
                     HttpStatus.BAD_REQUEST,

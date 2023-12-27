@@ -14,7 +14,6 @@ import at.fhtw.mtcg.model.User;
 import at.fhtw.mtcg.model.Lobby;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +61,6 @@ public class BattleController {
             }
 
         }catch (Exception e){
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -87,7 +85,7 @@ public class BattleController {
                 lobby.setBattleLog(BattleLog.toString());
                 user2.setWin(user2.getWin()+1);
                 user2.setScore(user2.getScore()-5);
-                user1.setWin(user1.getLoss()+1);
+                user1.setLoss(user1.getLoss()+1);
                 user1.setScore(user1.getScore()+3);
                 userRepository.updateUser(user1);
                 userRepository.updateUser(user2);
@@ -98,7 +96,7 @@ public class BattleController {
                 lobby.setGameStatus(1);
                 user1.setWin(user1.getWin()+1);
                 user1.setScore(user1.getScore()+3);
-                user2.setWin(user2.getLoss()+1);
+                user2.setLoss(user2.getLoss()+1);
                 user2.setScore(user2.getScore()-5);
                 lobby.setBattleLog(BattleLog.toString());
                 userRepository.updateUser(user1);

@@ -27,7 +27,7 @@ public class SessionController extends Controller {
                 return new Response(
                         HttpStatus.OK,
                         ContentType.JSON,
-                        "{\"token\":\""+retrivedUser.getToken()+"\"}"
+                        STR."{\"token\":\"\{retrivedUser.getToken()}\"}"
                 );
             }else{
                 throw new RuntimeException("Password not the same");

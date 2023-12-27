@@ -14,9 +14,7 @@ public class PackageService implements Service {
     @Override
     public Response handleRequest(Request request) {
         try {
-            if (request.getMethod() == Method.GET) {
-                //return this.weatherController.getWeatherPerRepository();
-            } else if (request.getMethod() == Method.POST && request.getHeaderMap().getHeader("Authorization").replace("Bearer ","").equals("admin-mtcgToken")) {
+            if (request.getMethod() == Method.POST && request.getHeaderMap().getHeader("Authorization").replace("Bearer ","").equals("admin-mtcgToken")) {
 
                 return packageController.createPackage(request);
             }

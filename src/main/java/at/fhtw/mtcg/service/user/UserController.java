@@ -9,7 +9,6 @@ import at.fhtw.mtcg.dal.UnitOfWork;
 import at.fhtw.mtcg.dal.repository.UserRepository;
 import at.fhtw.mtcg.helper.TokenVerification;
 import at.fhtw.mtcg.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 

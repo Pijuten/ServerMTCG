@@ -31,7 +31,7 @@ public class CardController extends Controller {
             Collection<Card> userCollection = packageRepository.getCardsByUsername(user);
             String json="[";
             for(Card card:userCollection){
-                json=json.concat("{\"Cardid\": \""+card.getId()+"\", \"Cardname\": \""+card.getName()+"\", \"Damage\": \""+card.getDamage()+"\"},");
+                json=json.concat(STR."{\"Cardid\": \"\{card.getId()}\", \"Cardname\": \"\{card.getName()}\", \"Damage\": \"\{card.getDamage()}\"},");
             }
             if((json.length()>1))
                 json = json.substring(0, json.length() - 1);

@@ -4,7 +4,7 @@ CREATE TABLE userData
     password     bytea,--2
     token        varchar,--3
     currency     int DEFAULT 40,--4
-    score        int DEFAULT 1000,--5
+    score        int DEFAULT 100,--5
     wins         int DEFAULT 0,--6
     draws        int DEFAULT 0,--7
     losses       int DEFAULT 0,--8

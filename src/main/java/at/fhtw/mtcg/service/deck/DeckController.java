@@ -32,7 +32,7 @@ public class DeckController extends Controller {
             Collection<Card> deck = packageRepository.getDeck(user);
             String json="[";
             for(Card card:deck){
-                json=json.concat("{\"Cardid\": \""+card.getId()+"\", \"Cardname\": \""+card.getName()+"\", \"Damage\": \""+card.getDamage()+"\"},");
+                json=json.concat(STR."{\"Cardid\": \"\{card.getId()}\", \"Cardname\": \"\{card.getName()}\", \"Damage\": \"\{card.getDamage()}\"},");
             }
             json = json.substring(0, json.length() - 1);
             json = json.concat("]");
@@ -40,6 +40,38 @@ public class DeckController extends Controller {
                     HttpStatus.OK,
                     ContentType.JSON,
                     json
+            );
+        }catch (Exception e){
+            unitOfWork.rollbackTransaction();
+            return new Response(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    ContentType.JSON,
+                    "{ \"message\" : \"Internal Server Error\" }"
+            );
+        }
+    }
+    public Response getDeckPlain(Request request){
+        TokenVerification tokenVerification = new TokenVerification();
+        User user = tokenVerification.verifyToken(request);
+        if(user==null){
+            return new Response(
+                    HttpStatus.FORBIDDEN,
+                    ContentType.JSON,
+                    "{ \"message\" : \"Not Loggedin\" }"
+            );
+        }
+        UnitOfWork unitOfWork = new UnitOfWork();
+        try(unitOfWork) {
+            PackageRepository packageRepository = new PackageRepository(unitOfWork);
+            Collection<Card> deck = packageRepository.getDeck(user);
+            StringBuilder contentString = new StringBuilder();
+            for(Card card:deck){
+                contentString.append(STR."\n \{card.getName()} \{card.getDamage()}");
+            }
+            return new Response(
+                    HttpStatus.OK,
+                    ContentType.JSON,
+                    contentString.toString()
             );
         }catch (Exception e){
             unitOfWork.rollbackTransaction();

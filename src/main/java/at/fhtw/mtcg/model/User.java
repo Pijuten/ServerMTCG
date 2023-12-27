@@ -37,6 +37,10 @@
                     String password) {
             this.username = username;
             this.password = password;
+        }public User(String username,
+                     int score) {
+            this.username = username;
+            this.score = score;
         }
         public User(String displayName,
                     String bio,
