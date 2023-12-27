@@ -6,8 +6,6 @@ import at.fhtw.httpserver.http.Method;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
-import at.fhtw.mtcg.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SessionService implements Service {
 
@@ -16,9 +14,7 @@ public class SessionService implements Service {
     @Override
     public Response handleRequest(Request request) {
         try {
-            if (request.getMethod() == Method.GET) {
-                //return this.weatherController.getWeatherPerRepository();
-            } else if (request.getMethod() == Method.POST) {
+            if (request.getMethod() == Method.POST) {
 
                 return sessionController.loginUser(request);
             }
@@ -28,7 +24,6 @@ public class SessionService implements Service {
                     "[]"
             );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,

@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.service.deck;
+package at.fhtw.mtcg.service.stats;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -7,20 +7,17 @@ import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
 
-public class DeckService implements Service {
-    private final DeckController deckController;
-    public DeckService(){
-        this.deckController=new DeckController();
+public class StatsService implements Service {
+    StatsController statsController;
+    public StatsService(){
+        this.statsController = new StatsController();
     }
     @Override
     public Response handleRequest(Request request) {
         try {
-            if (request.getMethod() == Method.GET) {
-                if(request.getParams().equals("format=plain"))
-                    return deckController.getDeckPlain(request);
-                return deckController.getDeck(request);
-            } else if (request.getMethod() == Method.PUT) {
-                return deckController.setDeck(request);
+            if (request.getMethod() == Method.POST) {
+
+                return statsController.getStats(request);
             }
             return new Response(
                     HttpStatus.BAD_REQUEST,

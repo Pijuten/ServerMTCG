@@ -12,7 +12,7 @@ public class TokenGenerator {
         String username = user.getUsername();
         if(username==null || username.isEmpty())
             return null;
-        return username+"-mtcgToken";
+        return STR."\{username}-mtcgToken";
     }
     private final User user;
     @Getter

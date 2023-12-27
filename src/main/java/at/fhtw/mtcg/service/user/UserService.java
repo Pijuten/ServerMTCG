@@ -6,8 +6,6 @@ import at.fhtw.httpserver.http.Method;
 import at.fhtw.httpserver.server.Request;
 import at.fhtw.httpserver.server.Response;
 import at.fhtw.httpserver.server.Service;
-import at.fhtw.mtcg.model.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UserService implements Service {
     private final UserController userController;
@@ -20,10 +18,11 @@ public class UserService implements Service {
     public Response handleRequest(Request request) {
         try {
         if (request.getMethod() == Method.GET) {
-            //return this.weatherController.getWeatherPerRepository();
+            return userController.getUserData(request);
         } else if (request.getMethod() == Method.POST) {
-
                 return userController.addUser(request);
+        } else if (request.getMethod() == Method.PUT) {
+            return userController.editUserData(request);
         }
         return new Response(
                 HttpStatus.BAD_REQUEST,
@@ -31,7 +30,6 @@ public class UserService implements Service {
                 "[]"
         );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,

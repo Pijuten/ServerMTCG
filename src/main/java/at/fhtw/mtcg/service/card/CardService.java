@@ -19,7 +19,6 @@ public class CardService implements Service {
         try {
             if (request.getMethod() == Method.GET) {
                 return cardController.getCardsUser(request);
-            } else if (request.getMethod() == Method.POST) {
             }
             return new Response(
                     HttpStatus.BAD_REQUEST,
@@ -27,7 +26,6 @@ public class CardService implements Service {
                     "[]"
             );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,

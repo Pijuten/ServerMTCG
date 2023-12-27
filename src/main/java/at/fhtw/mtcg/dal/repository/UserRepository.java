@@ -9,16 +9,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class UserRepository {
-    private UnitOfWork unitOfWork;
+    private final UnitOfWork unitOfWork;
 
     public UserRepository(UnitOfWork unitOfWork) {
         this.unitOfWork = unitOfWork;
     }
 
     public void createUser(User user) {
-        if(user.getUsername().isEmpty() || user.getPassword().isEmpty())
+        if (user.getUsername().isEmpty() || user.getPassword().isEmpty())
             throw new RuntimeException("Username or password is Empty");
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
@@ -63,6 +64,7 @@ public class UserRepository {
             throw new DataAccessException("Select nicht erfolgreich", e);
         }
     }
+
     public User getUserByToken(String token) {
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
@@ -92,7 +94,8 @@ public class UserRepository {
             throw new DataAccessException("Select nicht erfolgreich", e);
         }
     }
-    public void updateUser(User user){
+
+    public void updateUser(User user) {
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
                                 UPDATE userdata
@@ -111,22 +114,36 @@ public class UserRepository {
                                 WHERE
                                   username = ?;
                              """)) {
-            preparedStatement.setBytes(1,user.getHashedPassword());
-            preparedStatement.setString(2,user.getToken());
-            preparedStatement.setInt(3,user.getScore());
-            preparedStatement.setInt(4,user.getCurrency());
-            preparedStatement.setInt(5,user.getWin());
-            preparedStatement.setInt(6,user.getDraw());
-            preparedStatement.setInt(7,user.getLoss());
-            preparedStatement.setString(8,user.getDisplayName());
-            preparedStatement.setString(9,user.getBio());
-            preparedStatement.setString(10,user.getProfileImage());
-            preparedStatement.setBytes(11,user.getSalt());
-            preparedStatement.setString(12,user.getUsername());
+            preparedStatement.setBytes(1, user.getHashedPassword());
+            preparedStatement.setString(2, user.getToken());
+            preparedStatement.setInt(3, user.getCurrency());
+            preparedStatement.setInt(4, user.getScore());
+            preparedStatement.setInt(5, user.getWin());
+            preparedStatement.setInt(6, user.getDraw());
+            preparedStatement.setInt(7, user.getLoss());
+            preparedStatement.setString(8, user.getDisplayName());
+            preparedStatement.setString(9, user.getBio());
+            preparedStatement.setString(10, user.getProfileImage());
+            preparedStatement.setBytes(11, user.getSalt());
+            preparedStatement.setString(12, user.getUsername());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Insert nicht erfolgreich", e);
         }
     }
 
+    public List<User> getAllScores() {
+        try (PreparedStatement preparedStatement = unitOfWork.prepareStatement("""
+                Select username, score from userdata ORDER BY score DESC
+                """)) {
+            ResultSet rs = preparedStatement.executeQuery();
+            List<User> userList = new ArrayList<>();
+            while (rs.next()) {
+                userList.add(new User(rs.getString("username"),rs.getInt("score")));
+            }
+            return userList;
+        } catch (Exception e) {
+            throw new DataAccessException("Select nicht erfolgreich", e);
+        }
+    }
 }

@@ -30,15 +30,17 @@ public class PackageRepository {
                             resultSet.getDouble("damage"),
                             resultSet.getBoolean("deck"),
                             resultSet.getString("username"),
-                            resultSet.getInt("packageid")
+                            resultSet.getInt("packageid"),
+                            resultSet.getInt("damageType"),
+                            resultSet.getInt("type")
                     ));
         }
         return cardRows;
     }
     public void createCard(Card card){
         try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
-                     Insert into Cards(cardid, cardname, damage, deck, username, packageid)
-                     VALUES (?,?,?,?,?,?)
+                     Insert into Cards(cardid, cardname, damage, deck, username, packageid,damagetype,type)
+                     VALUES (?,?,?,?,?,?,?,?)
                 """)) {
             preparedStatement.setString(1,card.getId());
             preparedStatement.setString(2,card.getName());
@@ -46,6 +48,8 @@ public class PackageRepository {
             preparedStatement.setBoolean(4,card.getDeck());
             preparedStatement.setString(5,card.getUsername());
             preparedStatement.setInt(6,card.getPackageid());
+            preparedStatement.setInt(7,card.getDamageType());
+            preparedStatement.setInt(8,card.getType());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -120,7 +124,7 @@ public class PackageRepository {
     public void unsetDeck(User user){
         try (PreparedStatement preparedStatement =
                      this.unitOfWork.prepareStatement("""
-                                UPDATE cards set deck=? where username=?
+                                UPDATE cards set deck=false where username=?
                              """)) {
             preparedStatement.setString(1,user.getUsername());
             preparedStatement.executeUpdate();
@@ -128,12 +132,24 @@ public class PackageRepository {
             throw new DataAccessException("Update nicht erfolgreich", e);
         }
     }
-    public void addCardToDeck(Card card)  {
+    public void addCardToDeck(Card card,User user)  {
         try(PreparedStatement preparedStatement =
                     this.unitOfWork.prepareStatement("""
-                                UPDATE card set deck=true  where cardid=?
+                                UPDATE cards set deck=true  where cardid=? and where username=?
                              """)) {
             preparedStatement.setString(1,card.getId());
+            preparedStatement.setString(2,user.getUsername());
+            preparedStatement.executeUpdate();
+        }catch (Exception e){
+            throw new DataAccessException("Update nicht erfolgreich", e);
+        }
+    }
+    public void setInitialDeck(User user){
+        try(PreparedStatement preparedStatement =
+                    this.unitOfWork.prepareStatement("""
+                                UPDATE cards SET deck = true WHERE cardid IN(SELECT cardid from cards where username=? Order BY damage desc LIMIT 4)
+                             """)) {
+            preparedStatement.setString(1,user.getUsername());
             preparedStatement.executeUpdate();
         }catch (Exception e){
             throw new DataAccessException("Update nicht erfolgreich", e);

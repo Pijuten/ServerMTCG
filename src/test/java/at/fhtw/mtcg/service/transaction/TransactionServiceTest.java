@@ -27,7 +27,7 @@ class TransactionServiceTest {
 
         Response expectedResponse = new Response(HttpStatus.OK, ContentType.JSON, "{ \"message\" : \"Purchase successful\" }");
         Request request = Mockito.mock(Request.class);
-        Mockito.when(request.getMethod()).thenReturn(Method.POST);
+        Mockito.when(request.getMethod()).thenReturn(Method.GET);
         Mockito.when(request.getPathname()).thenReturn("transactions");
 
         List<String> pathList = new ArrayList<>();

@@ -14,10 +14,7 @@ public class TransactionService implements Service {
     @Override
     public Response handleRequest(Request request) {
         try {
-            if (request.getMethod() == Method.GET) {
-
-            } else if (request.getMethod() == Method.POST) {
-                if(request.getPathParts().get(1).equals("packages"))
+            if (request.getMethod() == Method.POST) {
                     return transactionController.purchasePackage(request);
             }
             return new Response(
@@ -26,7 +23,6 @@ public class TransactionService implements Service {
                     "[]"
             );
         }catch (Exception e){
-            e.printStackTrace();
             return new Response(
                     HttpStatus.BAD_REQUEST,
                     ContentType.JSON,

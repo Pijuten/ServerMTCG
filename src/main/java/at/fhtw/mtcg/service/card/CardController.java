@@ -31,9 +31,10 @@ public class CardController extends Controller {
             Collection<Card> userCollection = packageRepository.getCardsByUsername(user);
             String json="[";
             for(Card card:userCollection){
-                json=json.concat("{\"Cardid\": \""+card.getId()+"\", \"Cardname\": \""+card.getName()+"\", \"Damage\": \""+card.getDamage()+"\"},");
+                json=json.concat(STR."{\"Cardid\": \"\{card.getId()}\", \"Cardname\": \"\{card.getName()}\", \"Damage\": \"\{card.getDamage()}\"},");
             }
-            json = json.substring(0, json.length() - 1);
+            if((json.length()>1))
+                json = json.substring(0, json.length() - 1);
             json = json.concat("]");
             return new Response(
                     HttpStatus.OK,
@@ -41,8 +42,6 @@ public class CardController extends Controller {
                     json
             );
         }catch (Exception e){
-
-            e.printStackTrace();
             unitOfWork.rollbackTransaction();
             return new Response(
                     HttpStatus.INTERNAL_SERVER_ERROR,
