@@ -1,4 +1,4 @@
-package at.fhtw.mtcg.service.transaction;
+package at.fhtw.mtcg.service.battle;
 
 import at.fhtw.httpserver.http.ContentType;
 import at.fhtw.httpserver.http.HttpStatus;
@@ -9,38 +9,41 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.awt.event.MouseMotionAdapter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TransactionServiceTest {
-    TransactionController transactionController;
-    TransactionService transactionService;
+class BattleServiceTest {
+    BattleService battleService;
+    BattleController battleController;
     Request request;
+
     @BeforeEach
     void setup() throws NoSuchFieldException, IllegalAccessException {
-        this.transactionController = Mockito.mock(TransactionController.class);
-        this.transactionService = new TransactionService();
+        this.battleService = new BattleService();
+        this.battleController = Mockito.mock(BattleController.class);
         this.request = Mockito.mock(Request.class);
 
-        Field field = TransactionService.class.getDeclaredField("transactionController");
+        Field field = BattleService.class.getDeclaredField("battleController");
         field.setAccessible(true);
-        field.set(this.transactionService,this.transactionController);
+        field.set(battleService,battleController);
     }
     @Test
     void postPathTest(){
         Mockito.when(request.getMethod()).thenReturn(Method.POST);
+
         Response expectedResponse = new Response(HttpStatus.OK, ContentType.PLAIN_TEXT,"Success");
-        Mockito.when(transactionController.purchasePackage(request)).thenReturn(expectedResponse);
-        assertEquals(transactionService.handleRequest(request),expectedResponse);
+        Mockito.when(battleController.BattleUser(request)).thenReturn(expectedResponse);
+
+        assertEquals(battleService.handleRequest(request),expectedResponse);
     }
+
     @Test
-    void getPathTest(){
+    void getPath(){
         Mockito.when(request.getMethod()).thenReturn(Method.GET);
+
         Response expectedResponse = new Response(HttpStatus.BAD_REQUEST, ContentType.JSON, "[]");
-        assertEquals(transactionService.handleRequest(request).get(),expectedResponse.get());
+
+        assertEquals(battleService.handleRequest(request).get(),expectedResponse.get());
     }
 }

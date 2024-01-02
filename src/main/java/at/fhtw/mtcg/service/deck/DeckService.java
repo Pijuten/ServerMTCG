@@ -16,7 +16,7 @@ public class DeckService implements Service {
     public Response handleRequest(Request request) {
         try {
             if (request.getMethod() == Method.GET) {
-                if(request.getParams().equals("format=plain"))
+                if(request.getParams() != null && request.getParams().equals("format=plain"))
                     return deckController.getDeckPlain(request);
                 return deckController.getDeck(request);
             } else if (request.getMethod() == Method.PUT) {

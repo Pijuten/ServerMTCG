@@ -32,7 +32,7 @@ class DeckServiceTest {
     }
     @Test
     void postPathTest(){
-        Mockito.when(requestMock.getMethod()).thenReturn(Method.POST);
+        Mockito.when(requestMock.getMethod()).thenReturn(Method.PUT);
         Mockito.when(deckControllerMock.setDeck(requestMock)).thenReturn(expectedResponse);
         assertEquals(deckService.handleRequest(requestMock),expectedResponse);
     }

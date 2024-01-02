@@ -32,7 +32,7 @@ class PackageServiceTest {
 
         Mockito.when(request.getMethod()).thenReturn(Method.POST);
         HeaderMap headerMap = new HeaderMap();
-        headerMap.ingest("Authorization: B admin-mtcgToken");
+        headerMap.ingest("Authorization: Bearer admin-mtcgToken");
 
         Response expectedResponse = new Response(HttpStatus.OK, ContentType.PLAIN_TEXT,"Success");
         Mockito.when(request.getHeaderMap()).thenReturn(headerMap);

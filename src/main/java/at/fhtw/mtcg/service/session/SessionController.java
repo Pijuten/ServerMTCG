@@ -14,11 +14,15 @@ public class SessionController extends Controller {
     public Response loginUser(Request request){
         UnitOfWork unitOfWork = new UnitOfWork();
         try(unitOfWork) {
+            //Map json to User object
             User user = this.getObjectMapper().readValue(request.getBody(), User.class);
+
             UserRepository userRepository = new UserRepository(unitOfWork);
+
             User retrivedUser = userRepository.getUserByUsername(user.getUsername());
             PasswordHash passwordHash = new PasswordHash();
             retrivedUser.setPassword(user.getPassword());
+
             if(passwordHash.compareHash(retrivedUser)){
                 TokenGenerator tokenGenerator = new TokenGenerator(retrivedUser);
                 retrivedUser.setToken(tokenGenerator.getToken());

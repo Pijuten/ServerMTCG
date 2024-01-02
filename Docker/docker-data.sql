@@ -3,7 +3,7 @@ CREATE TABLE userData
     username     VARCHAR PRIMARY KEY UNIQUE,--1
     password     bytea,--2
     token        varchar,--3
-    currency     int DEFAULT 40,--4
+    currency     int DEFAULT 20,--4
     score        int DEFAULT 100,--5
     wins         int DEFAULT 0,--6
     draws        int DEFAULT 0,--7
@@ -33,4 +33,12 @@ CREATE TABLE lobby
         battleLog text,
         username1 varchar,
         username2 varchar
-)
+);
+CREATE TABLE trades
+(
+    tradeid     VARCHAR PRIMARY KEY UNIQUE,--1
+    cardid       VARCHAR,
+    type         VARCHAR,
+    mindamge     float,
+    username     VARCHAR
+);
