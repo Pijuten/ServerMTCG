@@ -9,8 +9,10 @@ public class TokenGenerator {
         this.token = GenerateToken();
     }
     private String GenerateToken(){
+        if(user==null)
+            return null;
         String username = user.getUsername();
-        if(username==null || username.isEmpty())
+        if(username.isEmpty())
             return null;
         return STR."\{username}-mtcgToken";
     }

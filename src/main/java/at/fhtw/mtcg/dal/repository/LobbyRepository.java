@@ -7,6 +7,8 @@ import at.fhtw.mtcg.model.Lobby;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LobbyRepository {
     UnitOfWork unitOfWork;
@@ -48,9 +50,9 @@ public class LobbyRepository {
     public Lobby getOpponent(User user) {
         try (PreparedStatement preparedStatement = unitOfWork.prepareStatement("""
                  SELECT * FROM lobby WHERE
-                (username1 IS NULL OR username2 IS NULL) AND
+                (username1 IS NULL OR username2 IS NULL) AND (
                 (username1 != ?) OR
-                (username2 != ?);
+                (username2 != ?));
                  """)) {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getUsername());
@@ -96,6 +98,33 @@ public class LobbyRepository {
             return null;
         } catch (Exception e) {
             throw new DataAccessException("Update nicht erfolgreich", e);
+        }
+    }
+    public List<Lobby> getLobbyByUsername(User user) {
+        try (PreparedStatement preparedStatement = unitOfWork.prepareStatement("""
+                SELECT * FROM lobby WHERE username1=? or username2=? ORDER BY lobbyid DESC
+                """)) {
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getUsername());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Lobby> lobbyList = new ArrayList<>();
+            while (resultSet.next())
+                lobbyList.add(new Lobby(resultSet.getInt("lobbyid"), resultSet.getInt("gamestatus"), resultSet.getString("battlelog"), resultSet.getString("username1"), resultSet.getString("username2")));
+            return lobbyList;
+        } catch (Exception e) {
+            throw new DataAccessException("SELECT nicht erfolgreich", e);
+        }
+    }
+
+    public boolean checkLobbyEmpty(int lobbyId) {
+        try (PreparedStatement preparedStatement = unitOfWork.prepareStatement("""
+                SELECT * FROM lobby WHERE lobbyid=? and username1 is not null and username2 is not null
+                """)) {
+            preparedStatement.setInt(1, lobbyId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return !resultSet.next();
+        } catch (Exception e) {
+            throw new DataAccessException("SELECT nicht erfolgreich", e);
         }
     }
 }

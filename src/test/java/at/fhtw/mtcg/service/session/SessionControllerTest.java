@@ -55,4 +55,16 @@ class SessionControllerTest {
         assertEquals("kienboec-mtcgToken", retrivedUser.getToken());
         assertEquals("200",response.get().substring(9,12));
     }
+    @Test
+    public void loginEmptyUserTest(){
+        Request request = new Request();
+        request.setBody("{\"Username\":\"kienboec\", \"Password\":\"daniel\"}");
+        UserController userController = new UserController();
+        userController.addUser(request);
+        request.setBody("{\"Username\":\"\", \"Password\":\"daniel\"}");
+        SessionController sessionController = new SessionController();
+        Response response = sessionController.loginUser(request);
+
+        assertEquals("500",response.get().substring(9,12));
+    }
 }

@@ -87,8 +87,7 @@ public class PackageRepository {
     }
     public  Collection<Card> getDeck(User user){
         try(PreparedStatement preparedStatement = this.unitOfWork.prepareStatement("""
-                     SELECT * FROM CARDS
-                     WHERE username=? and deck=true
+                     SELECT * FROM CARDS WHERE username=? and deck=true
                 """)) {
             preparedStatement.setString(1,user.getUsername());
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -135,11 +134,12 @@ public class PackageRepository {
     public void addCardToDeck(Card card,User user)  {
         try(PreparedStatement preparedStatement =
                     this.unitOfWork.prepareStatement("""
-                                UPDATE cards set deck=true  where cardid=? and where username=?
+                                UPDATE cards set deck=true where cardid=? and username=?
                              """)) {
             preparedStatement.setString(1,card.getId());
             preparedStatement.setString(2,user.getUsername());
-            preparedStatement.executeUpdate();
+            if(preparedStatement.executeUpdate()!=1)
+                throw new RuntimeException("NothingUpdated");
         }catch (Exception e){
             throw new DataAccessException("Update nicht erfolgreich", e);
         }
@@ -155,4 +155,18 @@ public class PackageRepository {
             throw new DataAccessException("Update nicht erfolgreich", e);
         }
     }
+
+    public void updateCard(Card card) {
+        try(PreparedStatement preparedStatement =
+                    this.unitOfWork.prepareStatement("""
+                                UPDATE cards SET username=? where cardid=?
+                             """)) {
+            preparedStatement.setString(1,card.getUsername());
+            preparedStatement.setString(2,card.getId());
+            preparedStatement.executeUpdate();
+        }catch (Exception e){
+            throw new DataAccessException("Update nicht erfolgreich", e);
+        }
+    }
+
 }
